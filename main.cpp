@@ -4,9 +4,14 @@
  * Created at: 2018-3-31
  */
 
-#include <iostream>
+#include <vector>
+
+#include "stack/stack-vm.hpp"
 
 int main() {
-  std::cout << "hello world" << '\n';
+  StackVM vm;
+  std::vector<i32> prog{3, 4, 0x40000001, 0x40000000};
+  vm.loadProgram(prog);
+  vm.run();
   return 0;
 }

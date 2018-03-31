@@ -7,5 +7,7 @@ add_compile_options(-Wall)
 
 add_executable (
   simple-vm
+  stack/stack-vm.hpp
+  stack/stack-vm.cpp
   main.cpp
   )
