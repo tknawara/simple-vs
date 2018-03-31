@@ -20,14 +20,14 @@
   instructions:
   0 -> halt
   1 -> add two elements of the stack
-
+  2 -> subtract two elements of the stack
+  3 -> multiply two elements of the stack
+  4 -> divide two elements of the stack
  */
 
 constexpr int VM_MEMORY_SIZE = 1000000;
 
-StackVM::StackVM() {
-  memory.reserve(VM_MEMORY_SIZE);
-}
+StackVM::StackVM() { memory.reserve(VM_MEMORY_SIZE); }
 
 i32 StackVM::getType(i32 instruction) {
   i32 type = 0xc0000000;
@@ -41,9 +41,7 @@ i32 StackVM::getData(i32 instruction) {
   return data;
 }
 
-void StackVM::fetch() {
-  ++pc;
-}
+void StackVM::fetch() { ++pc; }
 
 void StackVM::decode() {
   typ = getType(memory[pc]);
@@ -61,17 +59,34 @@ void StackVM::execute() {
 
 void StackVM::doPrimitive() {
   switch (dat) {
-  case 0:
-    std::cout << "halt" << '\n';
-    running = false;
-    break;
-  case 1:
-    std::cout << "adding, " << memory[sp - 1] << " " << memory[sp] << '\n';
-    memory[sp - 1] += memory[sp];
-    --sp;
-    break;
-  default:
-    std::cout << "unsupported instruction" << '\n';
+    case 0:
+      std::cout << "halt" << '\n';
+      running = false;
+      break;
+    case 1:
+      std::cout << "adding, " << memory[sp - 1] << " " << memory[sp] << '\n';
+      memory[sp - 1] += memory[sp];
+      --sp;
+      break;
+    case 2:
+      std::cout << "subtracting, " << memory[sp - 1] << " " << memory[sp]
+                << '\n';
+      memory[sp - 1] -= memory[sp];
+      --sp;
+      break;
+    case 3:
+      std::cout << "multiplying, " << memory[sp - 1] << " " << memory[sp]
+                << '\n';
+      memory[sp - 1] *= memory[sp];
+      --sp;
+      break;
+    case 4:
+      std::cout << "dividing, " << memory[sp - 1] << " " << memory[sp] << '\n';
+      memory[sp - 1] /= memory[sp];
+      --sp;
+      break;
+    default:
+      std::cout << "unsupported instruction" << '\n';
   }
 }
 

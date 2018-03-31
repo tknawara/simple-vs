@@ -6,11 +6,12 @@
 
 #include <vector>
 
-#include "stack/stack-vm.hpp"
+#include "stack-vm/stack-vm.hpp"
 
 int main() {
   StackVM vm;
-  std::vector<i32> prog{3, 4, 0x40000001, 0x40000000};
+  std::vector<i32> prog{3, 4,          0x40000001, 5,          0x40000002,
+                        3, 0x40000003, 2,          0x40000004, 0x40000000};
   vm.loadProgram(prog);
   vm.run();
   return 0;
