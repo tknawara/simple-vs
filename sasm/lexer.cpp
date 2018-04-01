@@ -119,7 +119,7 @@ void Lexer::handleSkip(std::string &s, char *lexem, State &state, size_t &i,
 
 void Lexer::handleDump(std::vector<std::string> &tokens, std::string &s,
                        char *lexem, State &state, size_t &i, size_t &j) {
-  if (j > 0) { // TODO: check this in a test
+  if (j > 0) {  // TODO: check this in a test
     lexem[j] = '\0';
     tokens.push_back(lexem);
     j = 0;

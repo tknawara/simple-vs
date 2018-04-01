@@ -12,8 +12,11 @@
 
 typedef int32_t i32;
 const std::string OUT_FILE = "out.bin";
-std::map<std::string, i32> opcode{
-  {"+", 0x40000001}, {"-", 0x40000002}, {"*", 0x40000003}, {"/", 0x40000004}, {"halt", 0x40000000}};
+std::map<std::string, i32> opcode{{"+", 0x40000001},
+                                  {"-", 0x40000002},
+                                  {"*", 0x40000003},
+                                  {"/", 0x40000004},
+                                  {"halt", 0x40000000}};
 
 std::vector<i32> compileToInstructions(std::vector<std::string> &tokens);
 bool isInteger(std::string &token);
