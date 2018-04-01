@@ -11,9 +11,7 @@
 #include <string>
 #include <vector>
 
-typedef uint8_t byte;
-
-enum State : byte { START, READ_CHAR, READ_BLOCK, SKIP, DUMP, COMMENT, END };
+enum State : uint8_t { START, READ_CHAR, READ_BLOCK, SKIP, DUMP, COMMENT, END };
 
 class Lexer {
  public:
