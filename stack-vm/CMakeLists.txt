@@ -24,9 +24,7 @@ endif()
 
 add_executable (
   simple-vm
-  stack-vm/stack-vm.hpp
-  stack-vm/stack-vm.cpp
-  sasm/lexer.hpp
-  sasm/lexer.cpp
+  stack-vm.hpp
+  stack-vm.cpp
   main.cpp
   )

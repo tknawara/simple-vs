@@ -44,8 +44,7 @@ std::vector<std::string> Lexer::lex(std::string &s) {
 
   if (j > 0) {
     lexem[j] = '\0';
-    std::string lexemStr(lexem);
-    tokens.push_back(lexemStr);
+    tokens.push_back(lexem);
   }
   return tokens;
 }
@@ -120,10 +119,9 @@ void Lexer::handleSkip(std::string &s, char *lexem, State &state, size_t &i,
 
 void Lexer::handleDump(std::vector<std::string> &tokens, std::string &s,
                        char *lexem, State &state, size_t &i, size_t &j) {
-  if (j > 0) {
+  if (j > 0) { // TODO: check this in a test
     lexem[j] = '\0';
-    std::string lexemStr(lexem);
-    tokens.push_back(lexemStr);
+    tokens.push_back(lexem);
     j = 0;
   }
   state = START;
@@ -143,8 +141,42 @@ void Lexer::handleEnd(std::string &s, char *lexem, State &state, size_t &i,
   i = s.length();
 }
 
-bool Lexer::my_isspace(char c) { return false; }
+bool Lexer::my_isspace(char c) {
+  switch (c) {
+    case '\n':
+    case '\r':
+    case '\t':
+    case '\v':
+    case ' ':
+    case '\f':
+      return true;
+    default:
+      return false;
+  }
+}
 
-bool Lexer::isspecial(char c) { return false; }
+bool Lexer::isspecial(char c) {
+  switch (c) {
+    case '[':
+    case ']':
+      return true;
+    default:
+      return false;
+  }
+}
 
-bool Lexer::isgroup(char c) { return false; }
+bool Lexer::isgroup(char c) {
+  beginChar = c;
+  switch (c) {
+    case '"':
+      endChar = '"';
+      return true;
+    case '(':
+      endChar = ')';
+      return true;
+    case ')':
+      return true;
+    default:
+      return false;
+  }
+}
