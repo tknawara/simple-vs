@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
   }
   std::ifstream infile(argv[1], std::ios::binary);
   int32_t i;
-  std::vector<i32> prog;
+  std::vector<int32_t> prog;
   while (infile.read((char *)&i, sizeof(i))) {
     prog.push_back(i);
   }

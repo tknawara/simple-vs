@@ -10,23 +10,21 @@
 #include <iostream>
 #include <vector>
 
-typedef int32_t i32;
-
 class StackVM {
  public:
   StackVM();
   void run();
-  void loadProgram(const std::vector<i32> prog);
+  void loadProgram(const std::vector<int32_t> prog);
 
  private:
-  i32 pc = 100;  // program counter
-  i32 sp = 0;    // stack pointer
-  std::vector<i32> memory;
-  i32 typ = 0;
-  i32 dat = 0;
+  int32_t pc = 100;
+  int32_t sp = 0;
+  std::vector<int32_t> memory;
+  int32_t instructionType = 0;
+  int32_t instructionData = 0;
   bool running = true;
-  i32 getType(i32 instruction);
-  i32 getData(i32 instruction);
+  int32_t getType(int32_t instruction);
+  int32_t getData(int32_t instruction);
   void fetch();
   void decode();
   void execute();
