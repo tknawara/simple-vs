@@ -12,10 +12,10 @@
 
 const std::string OUT_FILE = "out.bin";
 std::map<std::string, int32_t> opcode{{"+", 0x40000001},
-                                  {"-", 0x40000002},
-                                  {"*", 0x40000003},
-                                  {"/", 0x40000004},
-                                  {"halt", 0x40000000}};
+                                      {"-", 0x40000002},
+                                      {"*", 0x40000003},
+                                      {"/", 0x40000004},
+                                      {"halt", 0x40000000}};
 
 std::vector<int32_t> compileToInstructions(std::vector<std::string> &tokens);
 bool isInteger(std::string &token);
@@ -64,7 +64,7 @@ std::vector<int32_t> compileToInstructions(std::vector<std::string> &tokens) {
       if (instruction != -1) {
         instructions.push_back(instruction);
       } else {
-	printf("Error: Invalid instruction ! %s\n", i.c_str());
+        printf("Error: Invalid instruction ! %s\n", i.c_str());
       }
     }
   }
