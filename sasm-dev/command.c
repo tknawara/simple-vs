@@ -8,14 +8,31 @@
 #include <stdio.h>
 #include "command.h"
 
+/*
+  Instruction format
+  opcode: 6 bits
+  data:   26 bits
+
+  instruction opcode :
+  0 -> halt
+  1 -> push <data>
+  2 -> pop
+  3 -> goto <disp>
+  4 -> add
+  5 -> sub
+  6 -> mul
+  7 -> div
+
+ */
+
 #define HALT 0x00000000
-#define PUSH 0x10000000
-#define POP  0x20000000
-#define GOTO 0x30000000
-#define ADD  0x40000000
-#define SUB  0x50000000
-#define MUL  0x60000000
-#define DIV  0x70000000
+#define PUSH 0x04000000
+#define POP  0x08000000
+#define GOTO 0x0c000000
+#define ADD  0x10000000
+#define SUB  0x14000000
+#define MUL  0x18000000
+#define DIV  0x1c000000
 
 #define VALUE_LEN 26
 #define VALUE_MASK 0x01ffffff

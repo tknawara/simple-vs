@@ -7,8 +7,17 @@
 /* initialize the output file. */
 void init(void);
 
-/* encode the multiplication instruction. */
+/* encode the push instruction. */
 void encode_push(const int value);
+
+/* encode pop instruction */
+void encode_pop(void);
+
+/* encode goto instruction */
+void encode_goto(const char *label);
+
+/* encode halt instruction. */
+void encode_halt(void);
 
 /* encode the addition instruction. */
 void encode_mul(void);

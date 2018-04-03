@@ -8,99 +8,133 @@
 
 /*
   Instruction format
-  header: 2 bits
-  data:   30 bits
+  opcode: 6 bits
+  data:   26 bits
 
-  header format:
-  0 -> positive integer
-  1 -> primitive instruction
-  2 -> negative integer
-  3 -> undefined
-
-  instructions:
+  instruction opcode :
   0 -> halt
-  1 -> add two elements of the stack
-  2 -> subtract two elements of the stack
-  3 -> multiply two elements of the stack
-  4 -> divide two elements of the stack
- */
+  1 -> push <data>
+  2 -> pop
+  3 -> goto <disp>
+  4 -> add
+  5 -> sub
+  6 -> mul
+  7 -> div
+
+*/
 
 constexpr int VM_MEMORY_SIZE = 1000000;
-constexpr int TYPE_MASK = 0xc0000000;
-constexpr int DATA_MASK = 0x3fffffff;
+constexpr int DATA_MASK = 0x01ffffff;
 
 StackVM::StackVM() { memory.reserve(VM_MEMORY_SIZE); }
 
-int32_t StackVM::getType(int32_t instruction) {
-  int32_t type = TYPE_MASK;
-  type = (type & instruction) >> 30;
-  return type;
-}
-
-int32_t StackVM::getData(int32_t instruction) {
-  int32_t data = DATA_MASK;
-  data = data & instruction;
-  return data;
-}
-
 void StackVM::fetch() { ++pc; }
 
-void StackVM::decode() {
-  this->instructionType = getType(memory[pc]);
-  this->instructionData = getData(memory[pc]);
-}
-
 void StackVM::execute() {
-  if (instructionType == 0 || instructionData == 2) {
-    ++sp;
-    memory[sp] = instructionData;
-  } else {
-    doPrimitive();
+  printf("[stack-vm]  instruction=%d\n", memory[pc]);
+  uint32_t opcode = get_opcode(memory[pc]);
+  int32_t data = get_data(memory[pc]);
+  switch (opcode) {
+  case 0:
+    execute_halt();
+    break;
+  case 1:
+    execute_push(data);
+    break;
+  case 2:
+    execute_pop();
+    break;
+  case 3:
+    execute_goto(data);
+    break;
+  case 4:
+    execute_add();
+    break;
+  case 5:
+    execute_sub();
+    break;
+  case 6:
+    execute_mul();
+    break;
+  case 7:
+    execute_div();
+    break;
+  default:
+    puts("Unsupported operation");
   }
 }
 
-void StackVM::doPrimitive() {
-  switch (instructionData) {
-    case 0:
-      puts("halt");
-      this->running = false;
-      break;
-    case 1:
-      printf("adding, %d %d\n", memory[sp - 1], memory[sp]);
-      memory[sp - 1] += memory[sp];
-      --sp;
-      break;
-    case 2:
-      printf("subtracting, %d %d\n", memory[sp - 1], memory[sp]);
-      memory[sp - 1] -= memory[sp];
-      --sp;
-      break;
-    case 3:
-      printf("multiplying, %d %d\n", memory[sp - 1], memory[sp]);
-      memory[sp - 1] *= memory[sp];
-      --sp;
-      break;
-    case 4:
-      printf("dividing, %d %d\n", memory[sp - 1], memory[sp]);
-      memory[sp - 1] /= memory[sp];
-      --sp;
-      break;
-    default:
-      puts("Unsupported operation");
+void StackVM::execute_halt() {
+  puts("halt");
+  this->running = false;
+}
+
+void StackVM::execute_push(int32_t data) {
+  printf("[stack-vm]  pushing value=%d, on top of stack\n", data);
+  ++sp;
+  memory[sp] = data;
+}
+
+void StackVM::execute_pop() {
+  printf("[stack-vm]  pop value=%d, on top of the stack\n", memory[sp]);
+  --sp;
+}
+
+void StackVM::execute_goto(int32_t data) {
+  printf("[stack-vm] goto displacement=%d\n", data);
+  pc += data;
+}
+
+void StackVM::execute_add() {
+  printf("[stack-vm] adding, %d %d\n", memory[sp - 1], memory[sp]);
+  memory[sp - 1] += memory[sp];
+  --sp;
+}
+
+void StackVM::execute_sub() {
+  printf("[stack-vm] subtracting, %d %d\n", memory[sp - 1], memory[sp]);
+  memory[sp - 1] -= memory[sp];
+  --sp;
+}
+
+void StackVM::execute_mul() {
+  printf("[stack-vm] multiplying, %d %d\n", memory[sp - 1], memory[sp]);
+  memory[sp - 1] *= memory[sp];
+  --sp;
+}
+
+void StackVM::execute_div() {
+  printf("[stack-vm] dividing, %d %d\n", memory[sp - 1], memory[sp]);
+  memory[sp - 1] /= memory[sp];
+  --sp;
+}
+
+uint32_t StackVM::get_opcode(int32_t instruction) {
+  uint32_t opcode = instruction >> 26;
+  printf("[stack-vm]  opcode=%d\n", opcode);
+  return opcode;
+}
+
+int32_t StackVM::get_data(int32_t instruction) {
+  int sign = (instruction >> 25) & 1;
+  int32_t data = (instruction & DATA_MASK);
+  if (sign) {
+    data *= -1;
   }
+  printf("[stack-vm]  data=%d\n", data);
+  return data;
 }
 
 void StackVM::run() {
   --pc;
   while (running) {
     fetch();
-    decode();
     execute();
     printf("tos: %d\n", memory[sp]);
   }
 }
 
-void StackVM::loadProgram(const std::vector<int32_t> prog) {
+void StackVM::load_program(const std::vector<int32_t> prog) {
   for (size_t i = 0; i < prog.size(); ++i) {
     memory[pc + i] = prog[i];
   }

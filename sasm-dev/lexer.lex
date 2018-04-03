@@ -24,6 +24,7 @@ SIMI_COLON  ";"
 PUSH        "PUSH"
 POP         "POP"
 GOTO        "GOTO"
+HALT        "HALT"
 NUMBER      [0-9]+
 LABEL       [a-zA-Z][a-zA-Z0-9]*
 WS          [ \r\n\t]*
@@ -40,6 +41,7 @@ WS          [ \r\n\t]*
 {ADD}          { return TOKEN_ADD; }
 {DIV}          { return TOKEN_DIV; }
 {SUB}          { return TOKEN_SUB; }
+{HALT}         { return TOKEN_HALT; }
 {SIMI_COLON}   { return TOKEN_SIMI_COLON; }
 
 {LABEL}        { yylval->value = yytext; return TOKEN_LABEL; }
