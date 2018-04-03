@@ -26,7 +26,7 @@
 
 %union {
   int value;
-  char *label;
+  char label[100];
 }
 
 %token TOKEN_ADD
@@ -43,34 +43,50 @@
 %token TOKEN_EQ
 %token TOKEN_LTE
 %token TOKEN_GTE
+%token TOKEN_COLON
 %token <label> TOKEN_LABEL
 %token <value> TOKEN_NUMBER
  
 %%
  
 program
-: { init(); } statements
+: statements
 ;
 
 statements
-: statement TOKEN_SIMI_COLON statements
-| statement TOKEN_SIMI_COLON
+: statement statements
+| statement
 ;
 
 statement
-: TOKEN_PUSH TOKEN_NUMBER { encode_push($2); }
-| TOKEN_GOTO TOKEN_LABEL  { encode_goto($2); }
-| TOKEN_POP  { encode_pop();  }
-| TOKEN_ADD  { encode_add();  }
-| TOKEN_SUB  { encode_sub();  }
-| TOKEN_MUL  { encode_mul();  }
-| TOKEN_DIV  { encode_div();  }
-| TOKEN_HALT { encode_halt(); }
-| TOKEN_LT   { encode_lt();   }
-| TOKEN_GT   { encode_gt();   }
-| TOKEN_EQ   { encode_eq();   }
-| TOKEN_GTE  { encode_gte();  }
-| TOKEN_LTE  { encode_lte();  }
+: TOKEN_PUSH TOKEN_NUMBER TOKEN_SIMI_COLON
+{
+  if (pass_two()) {
+    encode_push($2);
+  } else {
+    increment_loc();
+  }
+}
+| TOKEN_GOTO TOKEN_LABEL  TOKEN_SIMI_COLON
+{
+  if (pass_two()) {
+    encode_goto($2);
+  } else {
+    increment_loc();
+  }
+}
+| TOKEN_LABEL TOKEN_COLON     { if (!pass_two()) { add_label($1); increment_loc(); }  }
+| TOKEN_POP  TOKEN_SIMI_COLON { if (pass_two()) encode_pop();  else increment_loc();  }
+| TOKEN_ADD  TOKEN_SIMI_COLON { if (pass_two()) encode_add();  else increment_loc();  }
+| TOKEN_SUB  TOKEN_SIMI_COLON { if (pass_two()) encode_sub();  else increment_loc();  }
+| TOKEN_MUL  TOKEN_SIMI_COLON { if (pass_two()) encode_mul();  else increment_loc();  }
+| TOKEN_DIV  TOKEN_SIMI_COLON { if (pass_two()) encode_div();  else increment_loc();  }
+| TOKEN_HALT TOKEN_SIMI_COLON { if (pass_two()) encode_halt(); else increment_loc();  }
+| TOKEN_LT   TOKEN_SIMI_COLON { if (pass_two()) encode_lt();   else increment_loc();  }
+| TOKEN_GT   TOKEN_SIMI_COLON { if (pass_two()) encode_gt();   else increment_loc();  }
+| TOKEN_EQ   TOKEN_SIMI_COLON { if (pass_two()) encode_eq();   else increment_loc();  }
+| TOKEN_GTE  TOKEN_SIMI_COLON { if (pass_two()) encode_gte();  else increment_loc();  }
+| TOKEN_LTE  TOKEN_SIMI_COLON { if (pass_two()) encode_lte();  else increment_loc();  }
 ;
 
 %%

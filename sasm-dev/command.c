@@ -44,9 +44,30 @@
 #define VALUE_MASK 0x01ffffff
 
 static FILE *f;
+static int loc;
+static int num_of_passes;
 
 void init(void) {
   f = fopen("out.bin", "w");
+  loc = 0;
+  num_of_passes = 0;
+}
+
+int pass_two(void) {
+  return num_of_passes > 0;
+}
+
+void increment_loc(void) {
+  ++loc;
+}
+
+void increment_pass(void) {
+  ++num_of_passes;
+}
+
+void add_label(char *label) {
+  // TODO
+  printf("[interpreter]  adding_label=%s\n", label);
 }
 
 void encode_push(const int value) {

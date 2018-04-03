@@ -7,6 +7,18 @@
 /* initialize the output file. */
 void init(void);
 
+/* return 1 if running in pass two. */
+int pass_two(void);
+
+/* increment the location of the program. */
+void increment_loc(void);
+
+/* increment number of passes. */
+void increment_pass(void);
+
+/* add the label to the list of defined labels. */
+void add_label(char *label);
+
 /* encode the push instruction. */
 void encode_push(const int value);
 

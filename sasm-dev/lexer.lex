@@ -30,6 +30,7 @@ GT          "GT"
 EQ          "EQ"
 LTE         "LTE"
 GTE         "GTE"
+COLON       ":"
 NUMBER      [0-9]+
 LABEL       [a-zA-Z][a-zA-Z0-9]*
 WS          [ \r\n\t]*
@@ -53,8 +54,9 @@ WS          [ \r\n\t]*
 {EQ}           { return TOKEN_EQ; }
 {LTE}          { return TOKEN_LTE; }
 {GTE}          { return TOKEN_GTE; }
+{COLON}        { return TOKEN_COLON; }
 
-{LABEL}        { yylval->label = yytext; return TOKEN_LABEL; }
+{LABEL}        { strcpy(yylval->label, yytext); return TOKEN_LABEL; }
 
 .              {  }
 

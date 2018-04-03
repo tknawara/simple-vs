@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "parser.h"
+#include "command.h"
 #include "lexer.h"
 
 extern int yyparse(yyscan_t scanner);
@@ -11,9 +12,14 @@ int main(int argc, char **argv) {
     printf("Usage %s <filename>\n", argv[0]);
     return 1;
   }
+  init();
   puts("begin parsing");
   parse(argv[1]);
   puts("finished parsing");
+  increment_pass();
+  puts("begin parsing, pass two");
+  parse(argv[1]);
+  puts("finished parsing, pass two");
   return 0;
 }
 
