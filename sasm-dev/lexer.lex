@@ -20,7 +20,6 @@ ADD         "ADD"
 SUB         "SUB"
 MUL         "MUL"
 DIV         "DIV"
-SIMI_COLON  ";"
 PUSH        "PUSH"
 POP         "POP"
 GOTO        "GOTO"
@@ -33,13 +32,15 @@ GTE         "GTE"
 COLON       ":"
 NEG_SIGN    "-"
 POS_SIGN    "+"
+NEW_LINE    "\n"
 NUMBER      [0-9]+
 LABEL       [a-zA-Z][a-zA-Z0-9]*
-WS          [ \r\n\t]*
+WS          [ \r\t]*
  
 %%
  
 {WS}           { /* Skip blanks. */ }
+{NEW_LINE}     { return TOKEN_NEW_LINE; }
 {NUMBER}       {sscanf(yytext, "%d", &yylval->value); return TOKEN_NUMBER; }
 
 {NEG_SIGN}     { return TOKEN_NEG_SIGN ;}
@@ -52,7 +53,6 @@ WS          [ \r\n\t]*
 {DIV}          { return TOKEN_DIV; }
 {SUB}          { return TOKEN_SUB; }
 {HALT}         { return TOKEN_HALT; }
-{SIMI_COLON}   { return TOKEN_SIMI_COLON; }
 {LT}           { return TOKEN_LT; }
 {GT}           { return TOKEN_GT; }
 {EQ}           { return TOKEN_EQ; }
