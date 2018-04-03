@@ -24,6 +24,7 @@
 */
 
 constexpr int VM_MEMORY_SIZE = 1000000;
+constexpr int OPCODE_SHIFT = 26;
 constexpr int DATA_MASK = 0x01ffffff;
 
 StackVM::StackVM() { memory.reserve(VM_MEMORY_SIZE); }
@@ -73,6 +74,9 @@ void StackVM::execute() {
     break;
   case 12:
     execute_lte();
+    break;
+  case 13:
+    execute_label();
     break;
   default:
     puts("Unsupported operation");
@@ -159,14 +163,18 @@ void StackVM::execute_eq() {
   }
 }
 
+void StackVM::execute_label() {
+  printf("[stack-vm] label found\n");
+}
+
 uint32_t StackVM::get_opcode(int32_t instruction) {
-  uint32_t opcode = instruction >> 26;
+  uint32_t opcode = instruction >> OPCODE_SHIFT;
   printf("[stack-vm]  opcode=%d\n", opcode);
   return opcode;
 }
 
 int32_t StackVM::get_data(int32_t instruction) {
-  int sign = (instruction >> 25) & 1;
+  int sign = (instruction >> (OPCODE_SHIFT - 1)) & 1;
   int32_t data = (instruction & DATA_MASK);
   if (sign) {
     data *= -1;

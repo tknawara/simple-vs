@@ -27,13 +27,16 @@ void increment_pass(void);
 void add_label(char *label);
 
 /* encode the push instruction. */
-void encode_push(const int value);
+void encode_push(int value);
 
 /* encode pop instruction */
 void encode_pop(void);
 
 /* encode goto instruction */
 void encode_goto(char *label);
+
+/* encode the existence of the label. */
+void encode_label(void);
 
 /* encode halt instruction. */
 void encode_halt(void);

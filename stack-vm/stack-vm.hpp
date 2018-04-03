@@ -36,6 +36,7 @@ class StackVM {
   void execute_gt();
   void execute_gte();
   void execute_eq();
+  void execute_label();
   uint32_t get_opcode(int32_t instruction);
   int32_t get_data(int32_t instruction);
   

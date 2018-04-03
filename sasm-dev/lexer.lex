@@ -31,6 +31,8 @@ EQ          "EQ"
 LTE         "LTE"
 GTE         "GTE"
 COLON       ":"
+NEG_SIGN    "-"
+POS_SIGN    "+"
 NUMBER      [0-9]+
 LABEL       [a-zA-Z][a-zA-Z0-9]*
 WS          [ \r\n\t]*
@@ -38,8 +40,10 @@ WS          [ \r\n\t]*
 %%
  
 {WS}           { /* Skip blanks. */ }
-{NUMBER}       { sscanf(yytext, "%d", &yylval->value); return TOKEN_NUMBER; }
+{NUMBER}       {sscanf(yytext, "%d", &yylval->value); return TOKEN_NUMBER; }
 
+{NEG_SIGN}     { return TOKEN_NEG_SIGN ;}
+{POS_SIGN}     { return TOKEN_POS_SIGN; }
 {PUSH}         { return TOKEN_PUSH; }
 {POP}          { return TOKEN_POP; }
 {GOTO}         { return TOKEN_GOTO; }

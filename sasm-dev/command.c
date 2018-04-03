@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include <math.h>
 
 #include "command.h"
 #include "data/list.h"
@@ -28,21 +29,22 @@
 
  */
 
-#define HALT 0x00000000
-#define PUSH 0x04000000
-#define POP  0x08000000
-#define GOTO 0x0c000000
-#define ADD  0x10000000
-#define SUB  0x14000000
-#define MUL  0x18000000
-#define DIV  0x1c000000
-#define GT   0x20000000
-#define LT   0x24000000
-#define EQ   0x28000000
-#define GTE  0x2c000000
-#define LTE  0x30000000
+#define HALT  0x00000000
+#define PUSH  0x04000000
+#define POP   0x08000000
+#define GOTO  0x0c000000
+#define ADD   0x10000000
+#define SUB   0x14000000
+#define MUL   0x18000000
+#define DIV   0x1c000000
+#define GT    0x20000000
+#define LT    0x24000000
+#define EQ    0x28000000
+#define GTE   0x2c000000
+#define LTE   0x30000000
+#define LABEL 0x34000000
 
-#define VALUE_LEN 26
+#define VALUE_LEN 25
 #define VALUE_MASK 0x01ffffff
 
 static FILE *f;
@@ -54,6 +56,17 @@ static void initialize_label_record(struct label_record **record, char *label) {
   *record = malloc(sizeof(struct label_record));
   strcpy((*record)->label, label);
   (*record)->loc = loc;
+}
+
+static int get_label_loc(char *label) {
+  for (int i = 0; i < size(list); ++i) {
+    struct label_record *label_record_ptr = (struct label_record *) get(list, i);
+    if (strcmp(label, label_record_ptr->label) == 0) {
+      return label_record_ptr->loc;
+    }
+  }
+  printf("[interpreter]  error couldn't find location of label=%s\n", label);
+  return -1;
 }
 
 void init(void) {
@@ -92,20 +105,26 @@ void add_label(char *label) {
   add(&list, label_record_ptr, sizeof(struct label_record));
 }
 
-void encode_push(const int value) {
-  printf("[interpreter]  encoding push command with value=%d\n", value);
+static unsigned int encode_instruction_data(int value, int opcode) {
   int sign = value < 0 ? 1 : 0;
-  int instruction = VALUE_MASK & value;
+  value = abs(value);
+  unsigned int instruction = VALUE_MASK & value;
   if (sign) {
     instruction = instruction | (1 << VALUE_LEN);
   }
-  instruction = instruction | PUSH;
-  fprintf(f, "%d\n", instruction);
+  instruction = instruction | opcode;
+  return instruction;
+}
+
+void encode_push(int value) {
+  printf("[interpreter]  encoding push command with value=%d\n", value);
+  int instruction = encode_instruction_data(value, PUSH);
+  fprintf(f, "%u\n", instruction);
 }
 
 void encode_pop(void) {
   puts("[interpreter]  encoding pop");
-  fprintf(f, "%d\n", POP);
+  fprintf(f, "%u\n", POP);
 }
 
 void encode_goto(char *label) {
@@ -113,57 +132,63 @@ void encode_goto(char *label) {
     label[i] = tolower(label[i]);
   }
   printf("[interpreter]  encoding goto with label=%s\n", label);
-  // TODO support two passes
-  fprintf(f, "%d\n", GOTO);
+  int label_loc = get_label_loc(label);
+  int disp = label_loc - loc;
+  int instruction = encode_instruction_data(disp, GOTO);
+  fprintf(f, "%u\n", instruction);
 }
 
 void encode_mul(void) {
   puts("[interpreter]  encoding multiply");
-  fprintf(f, "%d\n", MUL);
+  fprintf(f, "%u\n", MUL);
 }
 
 void encode_add(void) {
   puts("[interpreter]  encoding add");
-  fprintf(f, "%d\n", ADD);
+  fprintf(f, "%u\n", ADD);
 }
 
+void encode_label(void) {
+  puts("[interpreter] encoding label");
+  fprintf(f, "%u\n", LABEL);
+}
 
 void encode_div(void) {
   puts("[interpreter]  encoding division");
-  fprintf(f, "%d\n", DIV);
+  fprintf(f, "%u\n", DIV);
 }
 
 void encode_sub(void) {
   puts("[interpreter]  encoding subtraction");
-  fprintf(f, "%d\n", SUB);
+  fprintf(f, "%u\n", SUB);
 }
 
 void encode_halt(void) {
   puts("[interpreter]  encoding halt");
-  fprintf(f, "%d\n", HALT);
+  fprintf(f, "%u\n", HALT);
 }
 
 void encode_lt(void) {
   puts("[interpreter]  encoding LT");
-  fprintf(f, "%d\n", LT);
+  fprintf(f, "%u\n", LT);
 }
 
 void encode_lte(void) {
   puts("[interpreter]  encoding LTE");
-  fprintf(f, "%d\n", LTE);
+  fprintf(f, "%u\n", LTE);
 }
 
 void encode_gt(void) {
   puts("[interpreter]  encoding GT");
-  fprintf(f, "%d\n", GT);
+  fprintf(f, "%u\n", GT);
 }
 
 void encode_gte(void) {
   puts("[interpreter]  encoding GTE");
-  fprintf(f, "%d\n", GTE);
+  fprintf(f, "%u\n", GTE);
 }
 
 void encode_eq(void) {
   puts("[interpreter]  encoding EQ");
-  fprintf(f, "%d\n", EQ);
+  fprintf(f, "%u\n", EQ);
 }
