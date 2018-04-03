@@ -6,6 +6,7 @@
  */
 
 #include <stdio.h>
+#include <ctype.h>
 #include "command.h"
 
 /*
@@ -33,6 +34,11 @@
 #define SUB  0x14000000
 #define MUL  0x18000000
 #define DIV  0x1c000000
+#define GT   0x20000000
+#define LT   0x24000000
+#define EQ   0x28000000
+#define GTE  0x2c000000
+#define LTE  0x30000000
 
 #define VALUE_LEN 26
 #define VALUE_MASK 0x01ffffff
@@ -59,7 +65,10 @@ void encode_pop(void) {
   fprintf(f, "%d\n", POP);
 }
 
-void encode_goto(const char *label) {
+void encode_goto(char *label) {
+  for (int i = 0; label[i]; ++i) {
+    label[i] = tolower(label[i]);
+  }
   printf("[interpreter]  encoding goto with label=%s\n", label);
   // TODO support two passes
   fprintf(f, "%d\n", GOTO);
@@ -89,4 +98,29 @@ void encode_sub(void) {
 void encode_halt(void) {
   puts("[interpreter]  encoding halt");
   fprintf(f, "%d\n", HALT);
+}
+
+void encode_lt(void) {
+  puts("[interpreter]  encoding LT");
+  fprintf(f, "%d\n", LT);
+}
+
+void encode_lte(void) {
+  puts("[interpreter]  encoding LTE");
+  fprintf(f, "%d\n", LTE);
+}
+
+void encode_gt(void) {
+  puts("[interpreter]  encoding GT");
+  fprintf(f, "%d\n", GT);
+}
+
+void encode_gte(void) {
+  puts("[interpreter]  encoding GTE");
+  fprintf(f, "%d\n", GTE);
+}
+
+void encode_eq(void) {
+  puts("[interpreter]  encoding EQ");
+  fprintf(f, "%d\n", EQ);
 }

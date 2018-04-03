@@ -14,7 +14,7 @@ void encode_push(const int value);
 void encode_pop(void);
 
 /* encode goto instruction */
-void encode_goto(const char *label);
+void encode_goto(char *label);
 
 /* encode halt instruction. */
 void encode_halt(void);
@@ -30,3 +30,18 @@ void encode_div(void);
 
 /* encode the subtraction instruction. */
 void encode_sub(void);
+
+/* encode less than instruction. */
+void encode_lt(void);
+
+/* encode less than or equal. */
+void encode_lte(void);
+
+/* encode greater than instruction. */
+void encode_gt(void);
+
+/* encode less than or equal. */
+void encode_gte(void);
+
+/* encode equal instruction. */
+void encode_eq(void);

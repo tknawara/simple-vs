@@ -38,6 +38,11 @@
 %token TOKEN_SIMI_COLON
 %token TOKEN_POP
 %token TOKEN_GOTO
+%token TOKEN_LT
+%token TOKEN_GT
+%token TOKEN_EQ
+%token TOKEN_LTE
+%token TOKEN_GTE
 %token <label> TOKEN_LABEL
 %token <value> TOKEN_NUMBER
  
@@ -61,6 +66,11 @@ statement
 | TOKEN_MUL  { encode_mul();  }
 | TOKEN_DIV  { encode_div();  }
 | TOKEN_HALT { encode_halt(); }
+| TOKEN_LT   { encode_lt();   }
+| TOKEN_GT   { encode_gt();   }
+| TOKEN_EQ   { encode_eq();   }
+| TOKEN_GTE  { encode_gte();  }
+| TOKEN_LTE  { encode_lte();  }
 ;
 
 %%

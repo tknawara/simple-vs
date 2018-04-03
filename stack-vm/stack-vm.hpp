@@ -31,6 +31,11 @@ class StackVM {
   void execute_sub();
   void execute_mul();
   void execute_div();
+  void execute_lt();
+  void execute_lte();
+  void execute_gt();
+  void execute_gte();
+  void execute_eq();
   uint32_t get_opcode(int32_t instruction);
   int32_t get_data(int32_t instruction);
   

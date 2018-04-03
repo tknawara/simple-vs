@@ -59,6 +59,21 @@ void StackVM::execute() {
   case 7:
     execute_div();
     break;
+  case 8:
+    execute_gt();
+    break;
+  case 9:
+    execute_lt();
+    break;
+  case 10:
+    execute_eq();
+    break;
+  case 11:
+    execute_gte();
+    break;
+  case 12:
+    execute_lte();
+    break;
   default:
     puts("Unsupported operation");
   }
@@ -107,6 +122,41 @@ void StackVM::execute_div() {
   printf("[stack-vm] dividing, %d %d\n", memory[sp - 1], memory[sp]);
   memory[sp - 1] /= memory[sp];
   --sp;
+}
+
+void StackVM::execute_gt() {
+  printf("[stack-vm] GT comparing, %d %d\n", memory[sp - 1], memory[sp]);
+  if (memory[sp] <= memory[sp - 1]) {
+    ++pc;
+  }
+}
+
+void StackVM::execute_gte() {
+  printf("[stack-vm] GT comparing, %d %d\n", memory[sp - 1], memory[sp]);
+  if (memory[sp] < memory[sp - 1]) {
+    ++pc;
+  }
+}
+
+void StackVM::execute_lt() {
+  printf("[stack-vm] LT comparing, %d %d\n", memory[sp - 1], memory[sp]);
+  if (memory[sp] >= memory[sp - 1]) {
+    ++pc;
+  }
+}
+
+void StackVM::execute_lte() {
+  printf("[stack-vm] LTE comparing, %d %d\n", memory[sp - 1], memory[sp]);
+  if (memory[sp] > memory[sp - 1]) {
+    ++pc;
+  }
+}
+
+void StackVM::execute_eq() {
+  printf("[stack-vm] EQ comparing, %d %d\n", memory[sp - 1], memory[sp]);
+  if (memory[sp] != memory[sp - 1]) {
+    ++pc;
+  }
 }
 
 uint32_t StackVM::get_opcode(int32_t instruction) {

@@ -25,6 +25,11 @@ PUSH        "PUSH"
 POP         "POP"
 GOTO        "GOTO"
 HALT        "HALT"
+LT          "LT"
+GT          "GT"
+EQ          "EQ"
+LTE         "LTE"
+GTE         "GTE"
 NUMBER      [0-9]+
 LABEL       [a-zA-Z][a-zA-Z0-9]*
 WS          [ \r\n\t]*
@@ -43,8 +48,13 @@ WS          [ \r\n\t]*
 {SUB}          { return TOKEN_SUB; }
 {HALT}         { return TOKEN_HALT; }
 {SIMI_COLON}   { return TOKEN_SIMI_COLON; }
+{LT}           { return TOKEN_LT; }
+{GT}           { return TOKEN_GT; }
+{EQ}           { return TOKEN_EQ; }
+{LTE}          { return TOKEN_LTE; }
+{GTE}          { return TOKEN_GTE; }
 
-{LABEL}        { yylval->value = yytext; return TOKEN_LABEL; }
+{LABEL}        { yylval->label = yytext; return TOKEN_LABEL; }
 
 .              {  }
 
