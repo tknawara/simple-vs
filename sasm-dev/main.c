@@ -20,6 +20,7 @@ int main(int argc, char **argv) {
   puts("begin parsing, pass two");
   parse(argv[1]);
   puts("finished parsing, pass two");
+  destroy_command();
   return 0;
 }
 

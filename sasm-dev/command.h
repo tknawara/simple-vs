@@ -4,9 +4,16 @@
  * Created at: 2018-4-3
  */
 
+struct label_record {
+  char label[100];
+  int loc;
+};
+
 /* initialize the output file. */
 void init(void);
 
+/* clean up all the allocated memory. */
+void destroy_command(void);
 /* return 1 if running in pass two. */
 int pass_two(void);
 

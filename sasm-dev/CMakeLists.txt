@@ -23,6 +23,8 @@ add_executable(
   main.c
   command.h
   command.c
+  data/list.c
+  data/list.h
   ${FLEX_SASMTOKENIZER_OUTPUTS}
   ${BISON_SASMPARSER_OUTPUTS}
   )

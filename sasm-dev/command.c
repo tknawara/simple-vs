@@ -7,7 +7,9 @@
 
 #include <stdio.h>
 #include <ctype.h>
+
 #include "command.h"
+#include "data/list.h"
 
 /*
   Instruction format
@@ -46,11 +48,22 @@
 static FILE *f;
 static int loc;
 static int num_of_passes;
+static struct l_node *list = NULL;
+
+static void initialize_label_record(struct label_record **record, char *label) {
+  *record = malloc(sizeof(struct label_record));
+  strcpy((*record)->label, label);
+  (*record)->loc = loc;
+}
 
 void init(void) {
   f = fopen("out.bin", "w");
   loc = 0;
   num_of_passes = 0;
+}
+
+void destroy_command(void) {
+  destroy_list(list);
 }
 
 int pass_two(void) {
@@ -62,12 +75,21 @@ void increment_loc(void) {
 }
 
 void increment_pass(void) {
+  puts("[interpreter]  printing all the labels.");
+  for (int i = 0; i < size(list); ++i) {
+    struct label_record *label_record_ptr = (struct label_record *) get(list, i);
+    printf("label=%s, loc=%d\n", label_record_ptr->label, label_record_ptr->loc);
+  }
+  puts("");
   ++num_of_passes;
+  loc = 0;
 }
 
 void add_label(char *label) {
-  // TODO
   printf("[interpreter]  adding_label=%s\n", label);
+  struct label_record *label_record_ptr = NULL;
+  initialize_label_record(&label_record_ptr, label);
+  add(&list, label_record_ptr, sizeof(struct label_record));
 }
 
 void encode_push(const int value) {
