@@ -11,6 +11,7 @@
  
 %}
 
+%option outfile="lexer.c" header-file="lexer.h"
 %option warn nodefault
 %option caseless
 %option reentrant noyywrap never-interactive nounistd

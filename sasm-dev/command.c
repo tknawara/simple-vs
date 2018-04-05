@@ -8,9 +8,11 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <math.h>
+#include <stdlib.h>
+#include <string.h>
+#include <glib.h>
 
 #include "command.h"
-#include "data/list.h"
 
 /*
   Instruction format
@@ -27,7 +29,7 @@
   6 -> mul
   7 -> div
 
- */
+*/
 
 #define HALT  0x00000000
 #define PUSH  0x04000000
@@ -50,7 +52,7 @@
 static FILE *f;
 static int loc;
 static int num_of_passes;
-static struct l_node *list = NULL;
+static GHashTable *hash = NULL;
 
 static void initialize_label_record(struct label_record **record, char *label) {
   *record = malloc(sizeof(struct label_record));
@@ -59,24 +61,26 @@ static void initialize_label_record(struct label_record **record, char *label) {
 }
 
 static int get_label_loc(char *label) {
-  for (int i = 0; i < size(list); ++i) {
-    struct label_record *label_record_ptr = (struct label_record *) get(list, i);
-    if (strcmp(label, label_record_ptr->label) == 0) {
-      return label_record_ptr->loc;
-    }
+  struct label_record *label_record_ptr =
+    (struct label_record *) g_hash_table_lookup(hash, label);
+  printf("[interpreter]  label record location=%d\n", label_record_ptr->loc);
+  if (label_record_ptr) {
+    return label_record_ptr->loc;
+  } else {
+    printf("[interpreter]  label=%s, location couldn't be found\n", label);
+    return -1;
   }
-  printf("[interpreter]  error couldn't find location of label=%s\n", label);
-  return -1;
 }
 
 void init(void) {
   f = fopen("out.bin", "w");
   loc = 0;
   num_of_passes = 0;
+  hash = g_hash_table_new(g_str_hash, g_str_equal);
 }
 
 void destroy_command(void) {
-  destroy_list(list);
+  g_hash_table_destroy(hash);
 }
 
 int pass_two(void) {
@@ -87,13 +91,14 @@ void increment_loc(void) {
   ++loc;
 }
 
+static void iterator(gpointer key, gpointer value, gpointer user_data) {
+  struct label_record *label_record_ptr = (struct label_record*) value;
+  printf("[label]=%s, location=%d\n", label_record_ptr->label, label_record_ptr->loc);
+}
+
 void increment_pass(void) {
   puts("[interpreter]  printing all the labels.");
-  for (int i = 0; i < size(list); ++i) {
-    struct label_record *label_record_ptr = (struct label_record *) get(list, i);
-    printf("label=%s, loc=%d\n", label_record_ptr->label, label_record_ptr->loc);
-  }
-  puts("");
+  g_hash_table_foreach(hash, (GHFunc) iterator, NULL);
   ++num_of_passes;
   loc = 0;
 }
@@ -102,7 +107,7 @@ void add_label(char *label) {
   printf("[interpreter]  adding_label=%s\n", label);
   struct label_record *label_record_ptr = NULL;
   initialize_label_record(&label_record_ptr, label);
-  add(&list, label_record_ptr, sizeof(struct label_record));
+  g_hash_table_insert(hash, label, label_record_ptr);
 }
 
 static unsigned int encode_instruction_data(int value, int opcode) {

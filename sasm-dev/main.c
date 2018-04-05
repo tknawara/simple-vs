@@ -1,3 +1,9 @@
+/*
+ * File: main.c
+ * Description: entry point of the parser
+ * Created at: 2018-4-1
+ */
+
 #include <stdio.h>
 
 #include "parser.h"
@@ -26,7 +32,6 @@ int main(int argc, char **argv) {
 
 void parse(char *filename) {
   yyscan_t scanner;
-  YY_BUFFER_STATE state;
  
   if (yylex_init(&scanner)) {
     puts("flex error while initializing");
@@ -38,8 +43,6 @@ void parse(char *filename) {
   if (yyparse(scanner)) {
     puts("Error while initializing bison parser");
     return;
-  }
- 
-  //  yy_delete_buffer(scanner); 
+  } 
   yylex_destroy(scanner);
 }

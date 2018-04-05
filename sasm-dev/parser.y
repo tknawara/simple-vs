@@ -5,9 +5,9 @@
    * Created at: 2018-4-3
    */
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 #include "command.h"
-#include "parser.h"
-#include "lexer.h"
 
   %}
 
@@ -20,6 +20,8 @@
 
  }
  
+%output  "parser.c"
+%defines "parser.h"
 %define api.pure
 %lex-param   { yyscan_t scanner }
 %parse-param { yyscan_t scanner }
