@@ -41,12 +41,12 @@ static uint32_t get_data(uint32_t instruction)
 /*
  * Fetch the next instruction.
  */
-static void fetch() { ++pc; }
+static void fetch(void) { ++pc; }
 
 /*
  * Execute the halt instruction.
  */
-static void execute_halt()
+static void execute_halt(void)
 {
   puts("halt");
   running = FALSE;
@@ -69,6 +69,7 @@ static void execute_pop(void)
 {
   printf("[stack-vm]  pop value=%d, on top of the stack\n", memory[sp]);
   --sp;
+  
 }
 
 /*
