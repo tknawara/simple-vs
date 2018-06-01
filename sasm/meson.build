@@ -4,7 +4,7 @@ flex = find_program('flex')
 glibdep = dependency('glib-2.0')
 
 gen_flex_src = custom_target('flex',
-			     input : ['lexer.lex'],
+			     input : ['lexer.l'],
 			     output : ['lexer.c', 'lexer.h'],
 			     command : [flex, '@INPUT@'])
 
