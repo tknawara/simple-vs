@@ -68,8 +68,7 @@ static void execute_push(uint32_t data)
 static void execute_pop(void)
 {
   printf("[stack-vm]  pop value=%d, on top of the stack\n", memory[sp]);
-  --sp;
-  
+  --sp;  
 }
 
 /*

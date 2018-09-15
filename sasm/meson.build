@@ -1,4 +1,4 @@
-project('bison-tut', 'c')
+project('sasm', 'c')
 bison = find_program('bison')
 flex = find_program('flex')
 glibdep = dependency('glib-2.0')
