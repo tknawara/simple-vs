@@ -7,6 +7,8 @@
 #ifndef _HOME_TAREK_WORKSPACE_CPP_SIMPLE_VS_STACK_VM_STACK_VM_H
 #define _HOME_TAREK_WORKSPACE_CPP_SIMPLE_VS_STACK_VM_STACK_VM_H
 
+#include <glib.h>
+
 enum instructions {
     HALT,  /* Halt execution*/
     PUSH,  /* Push on top of stack */

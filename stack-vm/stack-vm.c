@@ -6,7 +6,6 @@
 
 #include "stack-vm.h"
 
-#include <glib.h>
 #include <stdint.h>
 #include <stdio.h>
 

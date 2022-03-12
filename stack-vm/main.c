@@ -1,4 +1,4 @@
-/*
+/**
  * File: main.cpp
  * Description: Application entry point
  * Created at: 2018-3-31
