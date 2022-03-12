@@ -1,4 +1,4 @@
-/*
+/**
  * File: command.c
  * Description: holder for the logic of interpreting
                 assembler instructions.

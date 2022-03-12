@@ -1,11 +1,11 @@
-#ifndef _HOME_TAREK_WORKSPACE_CPP_SIMPLE_VS_SASM_COMMAND_H
-#define _HOME_TAREK_WORKSPACE_CPP_SIMPLE_VS_SASM_COMMAND_H
-
-/*
+/**
  * File: command.h
  * Description: responsible for assembler translation
  * Created at: 2018-4-3
  */
+
+#ifndef _HOME_TAREK_WORKSPACE_CPP_SIMPLE_VS_SASM_COMMAND_H
+#define _HOME_TAREK_WORKSPACE_CPP_SIMPLE_VS_SASM_COMMAND_H
 
 struct label_record {
     char label[100];

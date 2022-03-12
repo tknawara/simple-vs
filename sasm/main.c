@@ -1,4 +1,4 @@
-/*
+/**
  * File: main.c
  * Description: entry point of the parser
  * Created at: 2018-4-1
